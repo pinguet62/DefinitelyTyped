@@ -11,7 +11,125 @@ export { Timestamp, ObjectId, MinKey, MaxKey, DBRef, Long } from 'mongodb';
 export type Class<T> = new (...args: any[]) => T;
 export type ModelClass = Class<Model>;
 
+export interface MQueryCircleArgType {
+    center: [number, number];
+    radius: number;
+    unique?: boolean;
+    spherical?: boolean;
+}
+
+export type MQueryCallbackType = (err?: any, result?: any, millis?: any) => void;
+
 export class MQuery {
+    // ignored: find
+    // ignored: findOne
+    // ignored: count
+    // ignored: remove
+    // update
+    // findOneAndUpdate
+    // findOneAndRemove
+
+    distinct(query?: MQuery | object, field?: string, callback?: MQueryCallbackType): this;
+    distinct(query: MQuery | object, callback: MQueryCallbackType): this;
+    distinct(field: string, callback?: MQueryCallbackType): this;
+    distinct(callback: MQueryCallbackType): this;
+
+    // ignored: exec
+    // stream
+
+    all(query: Array<string | string[]>): this;
+
+    and(conditions: object[]): this;
+
+    box(bottomLeftCoordinates: [number, number], upperRightCoordinates: [number, number]): this;
+
+    circle(x: string, args: MQueryCircleArgType): this;
+    circle(args: MQueryCircleArgType): this; // TODO intermediate type for within()
+
+    elemMatch(query: object, fct?: (x: MQuery) => void): this;
+
+    equals(value: any): this; // TODO intermediate type for where()
+
+    exists(value?: boolean): this; // TODO intermediate type for where()
+    exists(field: string, value?: boolean): this;
+
+    // geometry
+
+    gt(value: number): this; // TODO intermediate type for where()
+
+    gte(value: number): this; // TODO intermediate type for where()
+
+    in(values: any[]): this; // TODO intermediate type for where()
+
+    // intersects
+
+    lt(value: number): this; // TODO intermediate type for where()
+
+    lte(value: number): this; // TODO intermediate type for where()
+
+    maxDistance(value: number): this; // TODO intermediate type for near()
+
+    mod(divisor: number, remainder: number): this; // TODO intermediate type for where()
+    mod(field: string, divisor: number, remainder?: number): this;
+
+    ne(value: any): this;
+
+    nin(values: any[]): this; // TODO intermediate type for where()
+
+    nor(conditions: object[]): this;
+
+    // near
+
+    or(conditions: object[]): this;
+
+    // polygon
+
+    regex(value: string | RegExp): this;
+
+    select(field: string | { [key: string]: number }): this;
+
+    selected(): boolean;
+
+    selectedInclusively(): boolean;
+
+    selectedExclusively(): boolean;
+
+    size(value: number): this; // TODO intermediate type for where()
+
+    slice(from: number, to: number): this; // TODO intermediate type for where()
+    slice(range: [number, number]): this; // TODO intermediate type for where()
+    slice(field: string, from: number, to: number): this;
+    slice(field: string, range: [number, number]): this;
+
+    // within
+
+    where(fieldOrQuery: string | object): this; // TODO intermediate type for return
+
+    $where(queryOrFct: string | MQueryCallbackType): this; // TODO intermediate type for return
+
+    batchSize(size: number): this;
+
+    comment(comment: string): this;
+
+    hint(query: object): this;
+
+    limit(count: number): this;
+
+    maxScan(count: number): this;
+
+    maxTime(count: number): this;
+
+    skip(offset: number): this;
+
+    // ignored: sort
+
+    read(option: ReadPreference | "primary" | "p" | "primaryPreferred" | "pp" | "secondary" | "s" | "secondaryPreferred" | "sp" | "nearest" | "n"): this;
+
+    slaveOk(value?: boolean): this;
+
+    snapshot(value?: boolean): this;
+
+    tailable(value?: boolean): this;
 }
 
 // "extends MQuery": not actually inheritance, but more easy to implement
